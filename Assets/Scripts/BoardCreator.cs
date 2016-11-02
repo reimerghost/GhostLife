@@ -30,16 +30,16 @@ public class BoardCreator : MonoBehaviour
     private void Start()
     {
         // Create the board holder.
-        boardHolder = new GameObject("BoardHolder");
+        boardHolder = new GameObject("LaberintoHolder");
 
-          SetupTilesArray();
+        SetupTilesArray();
 
         CreateRoomsAndCorridors();
 
         SetTilesValuesForRooms();
         SetTilesValuesForCorridors();
 
-        //InstantiateTiles();
+        InstantiateTiles();
         InstantiateOuterWalls();
     }
 
@@ -176,13 +176,16 @@ public class BoardCreator : MonoBehaviour
             for (int j = 0; j < tiles[i].Length; j++)
             {
                 // ... and instantiate a floor tile for it.
-                InstantiateFromArray(floorTiles, i, j);
+                if (tiles[i][j] == TileType.Floor) {
+                    InstantiateFromArray(floorTiles, i, j, 10);
+                }
+                
 
                 // If the tile type is Wall...
                 if (tiles[i][j] == TileType.Wall)
-                {
+                { 
                     // ... instantiate a wall over the top.
-                    InstantiateFromArray(wallTiles, i, j);
+                    InstantiateFromArray(wallTiles, i, j,0);
                 }
             }
         }
@@ -216,7 +219,7 @@ public class BoardCreator : MonoBehaviour
         while (currentY <= endingY)
         {
             // ... instantiate an outer wall tile at the x coordinate and the current y coordinate.
-            InstantiateFromArray(outerWallTiles, xCoord, currentY);
+            InstantiateFromArray(outerWallTiles, xCoord, currentY,0);
 
             currentY++;
         }
@@ -232,14 +235,14 @@ public class BoardCreator : MonoBehaviour
         while (currentX <= endingX)
         {
             // ... instantiate an outer wall tile at the y coordinate and the current x coordinate.
-            InstantiateFromArray(outerWallTiles, currentX, yCoord);
+            InstantiateFromArray(outerWallTiles, currentX, yCoord,0);
 
             currentX++;
         }
     }
 
 
-    void InstantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord)
+    void InstantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord, float zCoord)
     {
         // Create a random index for the array.
         int randomIndex = Random.Range(0, prefabs.Length);
